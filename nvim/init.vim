@@ -27,7 +27,11 @@ Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'godlygeek/tabular'
 
+" YML
+Plugin 'stephpy/vim-yaml'
 
+" Ansible
+Plugin 'pearofducks/ansible-vim'
 
 " Terminal
 Plugin 'kassio/neoterm'
