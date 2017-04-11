@@ -18,6 +18,9 @@ Plugin 'tmhedberg/SimpylFold'
 Plugin 'Vimjas/vim-python-pep8-indent'
 Plugin 'nvie/vim-flake8'
 
+" Go
+Plugin 'fatih/vim-go'
+
 " Javascript
 Plugin 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
 Plugin 'mxw/vim-jsx', { 'for': ['javascript', 'javascript.jsx'] }
@@ -114,6 +117,9 @@ colorscheme hybrid
 let python_highlight_all=1
 syntax on
 
+" Python breakpoints
+ab ipdb import ipdb; ipdb.set_trace()<CR>
+
 " Line numbering
 set nu
 
@@ -141,7 +147,7 @@ let g:flake8_show_in_gutter=1
 let g:flake8_show_in_file=1
 
 " YCM
-let g:ycm_python_binary_path = 'python3.5'
+let g:ycm_python_binary_path = 'python3'
 let g:ycm_server_keep_logfiles = 1
 let g:ycm_server_log_level = 'debug'
 
@@ -152,4 +158,3 @@ function! TrimWhiteSpace()
 endfunction
 
 autocmd BufWritePre * :call TrimWhiteSpace()
-
