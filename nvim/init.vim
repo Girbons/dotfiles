@@ -13,31 +13,42 @@ Plugin 'gmarik/Vundle.vim'
 
 " Add all your plugins here (note older versions of Vundle used Bundle instead of Plugin)
 Plugin 'tmhedberg/SimpylFold'
+Plugin 'qpkorr/vim-bufkill'
 
 " Python
 Plugin 'Vimjas/vim-python-pep8-indent'
 Plugin 'nvie/vim-flake8'
+Plugin 'davidhalter/jedi-vim'
+
+" Fugggitivo
+Plugin 'tpope/vim-fugitive'
 
 " Go
 Plugin 'fatih/vim-go'
 
+" Rust
+Plugin 'rust-lang/rust.vim'
+
 " Javascript
 Plugin 'pangloss/vim-javascript', { 'for': ['javascript', 'javascript.jsx'] }
 Plugin 'mxw/vim-jsx', { 'for': ['javascript', 'javascript.jsx'] }
+Plugin 'prettier/vim-prettier', {
+            \ 'do': 'yarn install',
+            \ 'for': ['javascript', 'typescript', 'css', 'less', 'scss', 'json', 'graphql', 'markdown', 'vue', 'yaml', 'html'] }
 
 " Editor
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'godlygeek/tabular'
 
+" BO
+Plugin 'itchyny/lightline.vim'
+
 " YML
 Plugin 'stephpy/vim-yaml'
 
 " Ansible
 Plugin 'pearofducks/ansible-vim'
-
-" Terminal
-Plugin 'kassio/neoterm'
 
 " Syntax
 Plugin 'scrooloose/syntastic'
@@ -52,20 +63,41 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 
+" Commenter
+Plugin 'scrooloose/nerdcommenter'
+
 " Git
 Plugin 'airblade/vim-gitgutter'
 
 " Navigation
 Plugin 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
-" Airline
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
+" Docker
+Plugin 'ekalinin/Dockerfile.vim'
+
+" Font
+Plugin 'ryanoasis/vim-devicons'
+Plugin 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" Markdown
+Plugin 'JamshedVesuna/vim-markdown-preview'
+
+" black python formatter
+Plugin 'ambv/black'
+
+" <3
+Plugin 'Psykopear/neovim-package-info', { 'do': './install.sh' }
 
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
+
+" remap leader
+let mapleader = ","
+
+" Line numbering
+set nu
 
 " Disabled swap files
 set noswapfile
@@ -99,9 +131,6 @@ noremap <Down> <NOP>
 noremap <Left> <NOP>
 noremap <Right> <NOP>
 
-" Encoding
-set encoding=utf-8
-
 " Clipboard
 set clipboard+=unnamedplus
 
@@ -110,18 +139,37 @@ set mousemodel=popup
 set mouse=a
 
 " Colors
-syntax enable
+set termguicolors
 set background=dark
-colorscheme hybrid
+syntax enable
+colorscheme gruvbox
 
 let python_highlight_all=1
 syntax on
 
 " Python breakpoints
-ab ipdb import ipdb; ipdb.set_trace()<CR>
+au FileType python map <silent> <leader>b oimport ipdb; ipdb.set_trace()<esc>
+au FileType python map <silent> <leader>B g/^.*import ipdb; ipdb.set_trace().*/d
 
-" Line numbering
-set nu
+" Rust
+let g:rust_clip_command = 'pbcopy'
+
+" Javascript tabsssss
+autocmd FileType javascript setlocal ts=2 sw=2
+
+" fzf
+set rtp+=/usr/local/opt/fzf
+
+" vim-go
+let g:go_autodetect_gopath = 1
+let g:go_list_type = "quickfix"
+
+let g:go_highlight_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_generate_tags = 1
 
 " NerdTREE
 autocmd VimEnter * NERDTree
@@ -129,27 +177,44 @@ autocmd VimEnter * wincmd p
 
 map <C-n> :NERDTreeToggle<CR>
 
-let g:NERDTreeChDirMode=2
+" Devicons
+let g:webdevicons_enable = 1
+let g:webdevicons_enable_nerdtree = 1
+"let g:webdevicons_enable_airline_tabline = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:WebDevIconsOS = 'Darwin'
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
 let g:NERDTreeMapOpenInTabSilent = '<RightMouse>'
 let g:NERDTreeShowBookmarks=1
 let g:nerdtree_tabs_focus_on_files=1
 let g:nerdtree_tabs_autoclose = 1
 
-" Airline
-let g:airline_theme = 'hybrid'
-let g:airline_powerline_fonts = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:lightline = {
+      \ 'colorscheme': 'wombat',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'readonly', 'filename', 'modified', 'helloworld' ] ]
+      \ },
+      \ }
 
 " Flake8
 let g:flake8_show_in_gutter=1
 let g:flake8_show_in_file=1
 
-" YCM
-let g:ycm_python_binary_path = 'python3'
-let g:ycm_server_keep_logfiles = 1
-let g:ycm_server_log_level = 'debug'
+let g:python_host_prog="/usr/local/bin/python2/"
+let g:python3_host_prog="/Library/Frameworks/Python.framework/Versions/3.6/bin/python3"
+
+let s:go =  "b2ffff"
+let g:NERDTreeExtensionHighlightColor = {} " this line is needed to avoid error
+let g:NERDTreeExtensionHighlightColor['go'] = s:go " sets the color of css files to blue
+
+let g:go_fmt_command = "goimports"
+
+" markdown
+let vim_markdown_preview_github=1
 
 " Clean trailing whitespace
 match ErrorMsg '\s\+$'
@@ -158,3 +223,7 @@ function! TrimWhiteSpace()
 endfunction
 
 autocmd BufWritePre * :call TrimWhiteSpace()
+
+if !has('gui_running')
+  set t_Co=256
+endif
